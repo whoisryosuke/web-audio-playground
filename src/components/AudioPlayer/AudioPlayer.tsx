@@ -2,6 +2,8 @@ import { Button } from "@whoisryosuke/oat-milk-design";
 import React, { useEffect, useRef, useState } from "react";
 import AudioTime from "./AudioTime";
 import Waveform from "./Waveform";
+import useAudioStore from "../../store/audio";
+import Gain from "./mods/Gain";
 
 type Props = {
   file: string;
@@ -13,6 +15,7 @@ const AudioPlayer = ({ file, ...props }: Props) => {
   const audioElement = useRef<HTMLAudioElement>(null);
   const audioCtx = useRef<AudioContext>(null);
   const analyser = useRef<AnalyserNode>(null);
+  const { setAudioCtx, audioNodes } = useAudioStore();
 
   const handleDone = () => {
     setIsPlaying(false);
@@ -20,7 +23,10 @@ const AudioPlayer = ({ file, ...props }: Props) => {
 
   useEffect(() => {
     if (!audioElement.current) return;
-    audioCtx.current = new window.AudioContext();
+    if (!audioCtx.current) {
+      audioCtx.current = new window.AudioContext();
+      setAudioCtx(audioCtx.current);
+    }
     const audioSource = audioCtx.current.createMediaElementSource(
       audioElement.current
     );
@@ -32,18 +38,24 @@ const AudioPlayer = ({ file, ...props }: Props) => {
     setBufferLength(newBufferLength);
 
     audioSource.connect(analyser.current);
-    analyser.current.connect(audioCtx.current.destination);
+    // Loop through any dynamic audio nodes and attach them
+    let prevNode: AudioNode = analyser.current;
+    audioNodes.forEach((node, index) => {
+      prevNode.connect(node);
+      prevNode = node;
+    });
+    prevNode.connect(audioCtx.current.destination);
 
     // Add any event listeners to audio (like when it's done)
     audioElement.current.addEventListener("ended", handleDone);
 
     console.log("audio created", audioElement.current, audioCtx.current);
 
-    return () => {
-      audioElement.current?.remove();
-      audioCtx.current?.close();
-    };
-  }, [file]);
+    // return () => {
+    //   audioElement.current?.remove();
+    //   audioCtx.current?.close();
+    // };
+  }, [audioNodes]);
 
   const handlePlay = () => {
     if (!audioElement.current) return;
@@ -70,6 +82,7 @@ const AudioPlayer = ({ file, ...props }: Props) => {
     <div>
       <audio ref={audioElement} preload="auto" src={file} />
       <div>
+        <Gain />
         <Waveform analyser={analyser} bufferLength={bufferLength} />
         <AudioTime audio={audioElement} />
         <Button onClick={handlePlay}>{isPlaying ? "Pause" : "Play"}</Button>
