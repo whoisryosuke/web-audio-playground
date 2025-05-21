@@ -1,6 +1,7 @@
 import { Button } from "@whoisryosuke/oat-milk-design";
 import React, { useEffect, useRef, useState } from "react";
 import AudioTime from "./AudioTime";
+import Waveform from "./Waveform";
 
 type Props = {
   file: string;
@@ -8,13 +9,10 @@ type Props = {
 
 const AudioPlayer = ({ file, ...props }: Props) => {
   const [isPlaying, setIsPlaying] = useState(false);
+  const [bufferLength, setBufferLength] = useState(0);
   const audioElement = useRef<HTMLAudioElement>(null);
   const audioCtx = useRef<AudioContext>(null);
   const analyser = useRef<AnalyserNode>(null);
-  const dataArray = useRef<Uint8Array>(null);
-
-  const isLoaded = audioElement.current;
-  const isPaused = audioElement.current?.paused;
 
   const handleDone = () => {
     setIsPlaying(false);
@@ -30,8 +28,8 @@ const AudioPlayer = ({ file, ...props }: Props) => {
 
     // Configure analyser
     analyser.current.fftSize = 1024;
-    const bufferLength = analyser.current.frequencyBinCount;
-    dataArray.current = new Uint8Array(bufferLength);
+    const newBufferLength = analyser.current.frequencyBinCount;
+    setBufferLength(newBufferLength);
 
     audioSource.connect(analyser.current);
     analyser.current.connect(audioCtx.current.destination);
@@ -72,6 +70,7 @@ const AudioPlayer = ({ file, ...props }: Props) => {
     <div>
       <audio ref={audioElement} preload="auto" src={file} />
       <div>
+        <Waveform analyser={analyser} bufferLength={bufferLength} />
         <AudioTime audio={audioElement} />
         <Button onClick={handlePlay}>{isPlaying ? "Pause" : "Play"}</Button>
       </div>
