@@ -12,7 +12,7 @@
   "dependencies": {
     "@emotion/react": "^11.14.0",
     "@emotion/styled": "^11.14.0",
-    "@whoisryosuke/oat-milk-design": "^0.0.12",
+    "@whoisryosuke/oat-milk-design": "^0.0.13",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
     "zustand": "^5.0.3"
