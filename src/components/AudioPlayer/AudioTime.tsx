@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useState, type RefObject } from "react";
+import { Text } from "@whoisryosuke/oat-milk-design";
 
 type Props = {
   audio: RefObject<HTMLAudioElement | null>;
@@ -26,7 +27,21 @@ const AudioTime = ({ audio, ...props }: Props) => {
     };
   }, []);
 
-  return <div>{currentTime}</div>;
+  return (
+    <div>
+      <Text display="flex">
+        <Text
+          as="span"
+          fontWeight="bold"
+          color="gray-6"
+          style={{ textTransform: "uppercase" }}
+        >
+          Time
+        </Text>
+        : {currentTime}
+      </Text>
+    </div>
+  );
 };
 
 export default AudioTime;

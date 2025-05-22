@@ -1,4 +1,4 @@
-import { Button } from "@whoisryosuke/oat-milk-design";
+import { Button, Stack } from "@whoisryosuke/oat-milk-design";
 import React, { useEffect, useRef, useState } from "react";
 import AudioTime from "./AudioTime";
 import Waveform from "./Waveform";
@@ -81,12 +81,21 @@ const AudioPlayer = ({ file, ...props }: Props) => {
   return (
     <div>
       <audio ref={audioElement} preload="auto" src={file} />
-      <div>
+      <Stack vertical gap="0.25rem">
         <Gain />
         <Waveform analyser={analyser} bufferLength={bufferLength} />
         <AudioTime audio={audioElement} />
-        <Button onClick={handlePlay}>{isPlaying ? "Pause" : "Play"}</Button>
-      </div>
+        <Button
+          px={5}
+          py={2}
+          borderRadius={1}
+          onClick={handlePlay}
+          display="flex"
+          justifyContent="center"
+        >
+          {isPlaying ? "Pause" : "Play"}
+        </Button>
+      </Stack>
     </div>
   );
 };
