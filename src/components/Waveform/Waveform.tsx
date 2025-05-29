@@ -18,7 +18,7 @@ const Waveform = ({ ...props }: Props) => {
   );
 
   useEffect(() => {
-    if (!audioCtx && !loaded) return;
+    if (!audioCtx || loaded) return;
     analyser.current = audioCtx.createAnalyser();
 
     // Configure analyser

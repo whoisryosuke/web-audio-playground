@@ -11,7 +11,7 @@ const Gain = (props: Props) => {
   const { audioCtx, addAudioNode, removeAudioNode } = useAudioStore();
 
   useEffect(() => {
-    if (!audioCtx || !loaded) return;
+    if (!audioCtx || loaded) return;
     console.log("creating gain");
     gainRef.current = audioCtx.createGain();
     addAudioNode(gainRef.current);

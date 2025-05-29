@@ -5,6 +5,7 @@ import Waveform from "../Waveform/Waveform";
 import useAudioStore from "../../store/audio";
 import Gain from "../mods/Gain";
 import Biquad from "../mods/Biquad";
+import WaveShaper from "../mods/WaveShaper";
 
 type Props = {
   file: string;
@@ -33,6 +34,7 @@ const AudioPlayer = ({ file, ...props }: Props) => {
     // Loop through any dynamic audio nodes and attach them
     let prevNode: AudioNode = audioSource;
     audioNodes.forEach((node, index) => {
+      console.log("connecting node", node);
       prevNode.connect(node);
       prevNode = node;
     });
@@ -76,6 +78,7 @@ const AudioPlayer = ({ file, ...props }: Props) => {
       <Stack vertical gap="0.25rem">
         <Gain />
         <Biquad />
+        <WaveShaper />
         <Waveform />
         <AudioTime audio={audioElement} />
         <Button
