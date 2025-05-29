@@ -1,9 +1,10 @@
 import { Button, Stack } from "@whoisryosuke/oat-milk-design";
 import React, { useEffect, useRef, useState } from "react";
 import AudioTime from "./AudioTime";
-import Waveform from "./Waveform";
+import Waveform from "../Waveform/Waveform";
 import useAudioStore from "../../store/audio";
-import Gain from "./mods/Gain";
+import Gain from "../mods/Gain";
+import Biquad from "../mods/Biquad";
 
 type Props = {
   file: string;
@@ -14,7 +15,6 @@ const AudioPlayer = ({ file, ...props }: Props) => {
   const [bufferLength, setBufferLength] = useState(0);
   const audioElement = useRef<HTMLAudioElement>(null);
   const audioCtx = useRef<AudioContext>(null);
-  const analyser = useRef<AnalyserNode>(null);
   const { setAudioCtx, audioNodes } = useAudioStore();
 
   const handleDone = () => {
@@ -30,16 +30,8 @@ const AudioPlayer = ({ file, ...props }: Props) => {
     const audioSource = audioCtx.current.createMediaElementSource(
       audioElement.current
     );
-    analyser.current = audioCtx.current.createAnalyser();
-
-    // Configure analyser
-    analyser.current.fftSize = 1024;
-    const newBufferLength = analyser.current.frequencyBinCount;
-    setBufferLength(newBufferLength);
-
-    audioSource.connect(analyser.current);
     // Loop through any dynamic audio nodes and attach them
-    let prevNode: AudioNode = analyser.current;
+    let prevNode: AudioNode = audioSource;
     audioNodes.forEach((node, index) => {
       prevNode.connect(node);
       prevNode = node;
@@ -83,7 +75,8 @@ const AudioPlayer = ({ file, ...props }: Props) => {
       <audio ref={audioElement} preload="auto" src={file} />
       <Stack vertical gap="0.25rem">
         <Gain />
-        <Waveform analyser={analyser} bufferLength={bufferLength} />
+        <Biquad />
+        <Waveform />
         <AudioTime audio={audioElement} />
         <Button
           px={5}

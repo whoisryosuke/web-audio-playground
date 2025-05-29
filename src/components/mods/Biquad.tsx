@@ -1,22 +1,26 @@
 import React, { useEffect, useRef, useState } from "react";
-import useAudioStore from "../../../store/audio";
+import useAudioStore from "../../store/audio";
 import { Input, Slider } from "@whoisryosuke/oat-milk-design";
 
 type Props = {};
 
-const Gain = (props: Props) => {
+const Biquad = (props: Props) => {
   const [value, setValue] = useState(0);
-  const gainRef = useRef<GainNode | null>(null);
+  const biquadRef = useRef<BiquadFilterNode | null>(null);
   const { audioCtx, addAudioNode, removeAudioNode } = useAudioStore();
 
   useEffect(() => {
     if (!audioCtx) return;
     console.log("creating gain");
-    gainRef.current = audioCtx.createGain();
-    addAudioNode(gainRef.current);
+    biquadRef.current = audioCtx.createBiquadFilter();
+    addAudioNode(biquadRef.current);
+
+    biquadRef.current.type = "lowshelf";
+    biquadRef.current.frequency.setTargetAtTime(1000, audioCtx.currentTime, 0);
+    biquadRef.current.gain.setTargetAtTime(25, audioCtx.currentTime, 0);
 
     return () => {
-      if (gainRef.current) removeAudioNode(gainRef.current);
+      if (biquadRef.current) removeAudioNode(biquadRef.current);
     };
   }, [audioCtx]);
 
@@ -26,13 +30,13 @@ const Gain = (props: Props) => {
 
     const newGain = sliderValue;
 
-    if (gainRef.current) gainRef.current.gain.value = newGain;
+    if (biquadRef.current) biquadRef.current.gain.value = newGain;
   };
 
   return (
     <div>
       <Slider
-        label="Volume"
+        label="Biquad"
         value={value}
         minValue={-3}
         maxValue={2}
@@ -43,4 +47,4 @@ const Gain = (props: Props) => {
   );
 };
 
-export default Gain;
+export default Biquad;

@@ -1,24 +1,35 @@
 import { LineGraph } from "@whoisryosuke/oat-milk-design";
 import React, { useEffect, useRef, useState, type RefObject } from "react";
 import mapRange from "../../utils/mapRange";
+import useAudioStore from "../../store/audio";
 
 const DEFAULT_AUDIO_HEIGHT = 128;
 
-type Props = {
-  analyser: RefObject<AnalyserNode | null>;
-  bufferLength: number;
-};
+type Props = {};
 
-const Waveform = ({ analyser, bufferLength, ...props }: Props) => {
+const Waveform = ({ ...props }: Props) => {
+  const [loaded, setLoaded] = useState(false);
   const [time, setTime] = useState(0);
-  const dataArray = useRef<Uint8Array>(new Uint8Array(bufferLength));
+  const { audioCtx, addAudioNode, removeAudioNode } = useAudioStore();
+  const analyser = useRef<AnalyserNode>(null);
+  const dataArray = useRef<Uint8Array>(new Uint8Array(0));
   const animationRef = useRef<ReturnType<typeof requestAnimationFrame> | null>(
     null
   );
 
   useEffect(() => {
-    dataArray.current = new Uint8Array(bufferLength);
-  }, [bufferLength]);
+    if (!audioCtx && !loaded) return;
+    analyser.current = audioCtx.createAnalyser();
+
+    // Configure analyser
+    analyser.current.fftSize = 1024;
+    const newBufferLength = analyser.current.frequencyBinCount;
+    dataArray.current = new Uint8Array(newBufferLength);
+
+    // Connect this audio node to the output
+    addAudioNode(analyser.current);
+    setLoaded(true);
+  }, [audioCtx]);
 
   // Animate waveform
   const animate = (delta: number) => {
