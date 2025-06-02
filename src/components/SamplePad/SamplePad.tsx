@@ -5,6 +5,7 @@ import useAudioStore from "../../store/audio";
 import Gain from "../mods/Gain";
 import Biquad from "../mods/Biquad";
 import WaveShaper from "../mods/WaveShaper";
+import AudioWorkletExample from "../mods/AudioWorkletExample";
 
 const PIANO_KEYS = [
   "C",
@@ -101,6 +102,8 @@ const SamplePad = ({ file, ...props }: Props) => {
     // Add any event listeners to audio (like when it's done)
     sourceNode.addEventListener("ended", handleDone);
 
+    console.log("all audio nodes to connect", audioNodes);
+
     // Loop through any dynamic audio nodes and attach them
     let prevNode: AudioNode = sourceNode;
     audioNodes.forEach((node, index) => {
@@ -127,6 +130,7 @@ const SamplePad = ({ file, ...props }: Props) => {
       {/* <audio ref={audioElement} preload="auto" src={file} /> */}
       <Stack vertical gap="0.25rem">
         <Gain />
+        <AudioWorkletExample />
         {/* <Biquad /> */}
         {/* <WaveShaper /> */}
         <Waveform />
