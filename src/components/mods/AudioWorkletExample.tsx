@@ -13,14 +13,26 @@ const AudioWorkletExample = (props: Props) => {
   const { audioCtx, addAudioNode, removeAudioNode } = useAudioStore();
 
   const createNode = async () => {
+    // Fetch the WASM module
+    const response = await fetch("/wasm/rust_wasm_audio_bg.wasm");
+    const wasmData = await response.arrayBuffer();
+
+    // Create the worklet
     console.log("creating worklet...");
     try {
       await audioCtx.audioWorklet.addModule(WhiteNoiseProcessorWorklet);
       nodeRef.current = new AudioWorkletNode(audioCtx, "white-noise-processor");
 
+      // Send the WASM payload to Audio processor
+      nodeRef.current.port.postMessage({ type: "init-wasm", data: wasmData });
+
       console.log("created worklet node", nodeRef.current);
       addAudioNode(nodeRef.current);
       setLoaded(true);
+
+      nodeRef.current.addEventListener("processorerror", (e) =>
+        console.error("Audio Worklet processing error", e)
+      );
     } catch (e) {
       console.log("failed to create worklet", e);
     }
