@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 import useAudioStore from "../../store/audio";
 import { Input, Slider } from "@whoisryosuke/oat-milk-design";
 import WhiteNoiseProcessorWorklet from "../../workers/white-noise-processor.ts?url";
+import wasm from "rust-wasm-audio/rust_wasm_audio_bg.wasm?url";
 console.log("url to module", WhiteNoiseProcessorWorklet);
 
 type Props = {};
@@ -14,7 +15,7 @@ const AudioWorkletExample = (props: Props) => {
 
   const createNode = async () => {
     // Fetch the WASM module
-    const response = await fetch("/wasm/rust_wasm_audio_bg.wasm");
+    const response = await fetch(wasm);
     const wasmData = await response.arrayBuffer();
 
     // Create the worklet
