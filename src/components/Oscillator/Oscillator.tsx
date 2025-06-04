@@ -4,6 +4,7 @@ import Waveform from "../Waveform/Waveform";
 import useAudioStore from "../../store/audio";
 import Gain from "../mods/Gain";
 import Biquad from "../mods/Biquad";
+import AudioWorkletExample from "../mods/AudioWorkletExample";
 
 type Props = {};
 
@@ -101,6 +102,8 @@ const Oscillator = ({ ...props }: Props) => {
       <Stack vertical gap="0.25rem">
         <Gain />
         <Biquad />
+        <AudioWorkletExample />
+
         <Waveform />
         <Button
           px={5}

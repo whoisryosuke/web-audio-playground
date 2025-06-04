@@ -24,8 +24,8 @@ function App() {
   return (
     <ThemeProvider>
       {/* <AudioPlayer file="music/ff8-magic.mp3" /> */}
-      <SamplePad file="music/ff8-magic.mp3" />
-      {/* <Oscillator /> */}
+      {/* <SamplePad file="music/ff8-magic.mp3" /> */}
+      <Oscillator />
     </ThemeProvider>
   );
 }
