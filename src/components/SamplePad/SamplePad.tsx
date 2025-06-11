@@ -6,6 +6,7 @@ import Gain from "../mods/Gain";
 import Biquad from "../mods/Biquad";
 import WaveShaper from "../mods/WaveShaper";
 import AudioWorkletExample from "../mods/AudioWorkletExample";
+import StaticWaveform from "../Waveform/StaticWaveform";
 
 const PIANO_KEYS = [
   "C",
@@ -68,7 +69,7 @@ const SamplePad = ({ file, ...props }: Props) => {
     //   audioElement.current?.remove();
     //   audioCtx.current?.close();
     // };
-  }, [audioNodes]);
+  }, [file]);
 
   const handlePlay = (octaveIndex: number, pianoKeyIndex: number) => {
     if (!audioBuffer.current || !audioCtx.current) return;
@@ -130,9 +131,10 @@ const SamplePad = ({ file, ...props }: Props) => {
       {/* <audio ref={audioElement} preload="auto" src={file} /> */}
       <Stack vertical gap="0.25rem">
         <Gain />
-        <AudioWorkletExample />
+        {/* <AudioWorkletExample /> */}
         {/* <Biquad /> */}
         {/* <WaveShaper /> */}
+        {audioBuffer.current && <StaticWaveform buffer={audioBuffer.current} />}
         <Waveform />
         {/* <AudioTime audio={audioElement} /> */}
         {OCTAVES.map((octave, octaveIndex) => (
