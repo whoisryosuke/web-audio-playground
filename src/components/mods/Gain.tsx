@@ -1,14 +1,14 @@
 import React, { useEffect, useRef, useState } from "react";
 import useAudioStore from "../../store/audio";
 import { Input, Slider } from "@whoisryosuke/oat-milk-design";
-import type { ASDRConfig } from "../../types/audio";
+import type { ADSRConfig } from "../../types/audio";
 
 type Props = {};
 
 const Gain = (props: Props) => {
   const [loaded, setLoaded] = useState(false);
   const [value, setValue] = useState(0);
-  const [asdr, setAsdr] = useState<ASDRConfig>({
+  const [adsr, setAdsr] = useState<ADSRConfig>({
     attack: 0.1,
     decay: 0.2,
     sustain: 0.7,

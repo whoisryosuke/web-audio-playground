@@ -7,8 +7,8 @@ import Biquad from "../mods/Biquad";
 import WaveShaper from "../mods/WaveShaper";
 import AudioWorkletExample from "../mods/AudioWorkletExample";
 import StaticWaveform from "../Waveform/StaticWaveform";
-import { releaseASDR, scheduleASDR } from "../../utils/audio";
-import ASDR from "../mods/ASDR";
+import { releaseADSR, scheduleADSR } from "../../utils/audio";
+import ADSR from "../mods/ADSR/ADSR";
 
 const PIANO_KEYS = [
   "C",
@@ -118,8 +118,8 @@ const SamplePad = ({ file, ...props }: Props) => {
     //   sourceNode.connect(audioCtx.current.destination);
 
     const now = audioCtx.current.currentTime;
-    // Schedule ASDR
-    const asdrConfig = {
+    // Schedule ADSR
+    const adsrConfig = {
       attack: 0.1,
       decay: 0.2,
       sustain: 0.7,
@@ -129,8 +129,8 @@ const SamplePad = ({ file, ...props }: Props) => {
     // Get the gain node
     const gainNode = audioNodes.get("gain") as GainNode;
     if (gainNode) {
-      // Schedule the ASDR press and release
-      scheduleASDR(gainNode.gain, now, asdrConfig);
+      // Schedule the ADSR press and release
+      scheduleADSR(gainNode.gain, now, adsrConfig);
     }
 
     // Play audio
@@ -154,7 +154,7 @@ const SamplePad = ({ file, ...props }: Props) => {
         {/* <Biquad /> */}
         {/* <WaveShaper /> */}
         <div>
-          {audioBuffer && <ASDR duration={audioBuffer.duration} />}
+          {audioBuffer && <ADSR duration={audioBuffer.duration} />}
           {audioBuffer && <StaticWaveform buffer={audioBuffer} />}
           <Waveform />
         </div>

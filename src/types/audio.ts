@@ -1,4 +1,4 @@
-export type ASDRConfig = {
+export type ADSRConfig = {
   attack: number;
   sustain: number;
   decay: number;

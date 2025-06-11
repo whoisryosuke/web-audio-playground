@@ -1,8 +1,8 @@
 import React, { useCallback, useEffect, useRef } from "react";
-import useAudioStore from "../../store/audio";
+import useAudioStore from "../../../store/audio";
 import styled from "@emotion/styled";
-import type { ASDRConfig } from "../../types/audio";
-import mapRange from "../../utils/mapRange";
+import type { ADSRConfig } from "../../../types/audio";
+import mapRange from "../../../utils/mapRange";
 import { baseColors } from "@whoisryosuke/oat-milk-design";
 
 const Container = styled.div`
@@ -20,11 +20,11 @@ const POINTS_TO_DRAW = [
   "sustain",
   "release",
   "decay",
-] as unknown as (keyof ASDRConfig)[];
+] as unknown as (keyof ADSRConfig)[];
 
-const ASDR = ({ duration }: Props) => {
+const ADSRViz = ({ duration }: Props) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const { asdr, setAsdr } = useAudioStore();
+  const { adsr, setAdsr } = useAudioStore();
 
   const draw = useCallback(() => {
     if (!canvasRef.current) return;
@@ -48,7 +48,7 @@ const ASDR = ({ duration }: Props) => {
     // Start at 0 - that's how our envelope starts
     ctx.moveTo(0, canvasHeight);
     POINTS_TO_DRAW.forEach((point, pointIndex) => {
-      const data = asdr[point];
+      const data = adsr[point];
       const amplitude = mapRange(data, 0, duration, 0, 100);
       const x = (canvasWidth / POINTS_TO_DRAW.length) * (pointIndex + 1);
       const y = amplitude;
@@ -60,20 +60,17 @@ const ASDR = ({ duration }: Props) => {
 
     ctx.stroke();
     // this.animationFrameRef = requestAnimationFrame(this.draw.bind(this));
-  }, [asdr]);
+  }, [adsr]);
 
   useEffect(() => {
     draw();
   }, [draw]);
 
   return (
-    <div>
-      <h3>ASDR</h3>
-      <Container>
-        <canvas ref={canvasRef} width={400} height={300} />
-      </Container>
-    </div>
+    <Container>
+      <canvas ref={canvasRef} width={400} height={300} />
+    </Container>
   );
 };
 
-export default ASDR;
+export default ADSRViz;
