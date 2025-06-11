@@ -2102,10 +2102,10 @@
     "@types/babel__core" "^7.20.5"
     react-refresh "^0.17.0"
 
-"@whoisryosuke/oat-milk-design@^0.0.15":
-  version "0.0.15"
-  resolved "https://registry.yarnpkg.com/@whoisryosuke/oat-milk-design/-/oat-milk-design-0.0.15.tgz#940b2c66b43e4104901a7f34c6391574b8ac67b4"
-  integrity sha512-tE9FaXkST2G+EHkyTsZHkhzYRyA3MqEUbpvZkY/L5wLK7NoHYZhakEtEsIaZbFJOnmWFIl2UlCfKF9z8S0EbwQ==
+"@whoisryosuke/oat-milk-design@^0.1.0":
+  version "0.1.0"
+  resolved "https://registry.yarnpkg.com/@whoisryosuke/oat-milk-design/-/oat-milk-design-0.1.0.tgz#d70e7c9de4471b1e35814215d16a18a4769c603a"
+  integrity sha512-MiVWGAWx+CIoH1ZpNtSNsmmkU5MYtn9c1KvI6WuWiuTE5XxJ7U2FBWPkPEhMnpwOLhbp2tdvARaJ9EL72ZXZYg==
   dependencies:
     "@emotion/react" "^11.14.0"
     "@emotion/styled" "^11.14.0"

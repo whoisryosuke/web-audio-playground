@@ -1,9 +1,9 @@
 import React, { useCallback, useEffect, useRef } from "react";
 import useAudioStore from "../../store/audio";
-import { Slider } from "@whoisryosuke/oat-milk-design";
 import styled from "@emotion/styled";
 import type { ASDRConfig } from "../../types/audio";
 import mapRange from "../../utils/mapRange";
+import { baseColors } from "@whoisryosuke/oat-milk-design";
 
 const Container = styled.div`
   position: relative;
@@ -43,7 +43,7 @@ const ASDR = ({ duration }: Props) => {
 
     ctx.beginPath();
     ctx.lineWidth = 1.5;
-    ctx.strokeStyle = "blue";
+    ctx.strokeStyle = baseColors["blue-5"];
 
     // Start at 0 - that's how our envelope starts
     ctx.moveTo(0, canvasHeight);
