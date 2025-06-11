@@ -24,10 +24,13 @@ export function scheduleASDR(
 
   // Sustain - Ramps to sustain
   gainParam.linearRampToValueAtTime(sustain * peak, time + attack + decay);
+
+  // Release - Ramps to nothing
+  gainParam.linearRampToValueAtTime(0, time + attack + decay + release);
 }
 
 /**
- * Releases ASDR envelope at provided time. Basically fades audio out.
+ * Releases ASDR envelope at provided time. Basically fades audio out. Optional - if you need to have a key held vs knowing the duration.
  * @param gainParam The gain parameter from the gain node (usually `gainNode.gain`)
  * @param time
  * @param duration

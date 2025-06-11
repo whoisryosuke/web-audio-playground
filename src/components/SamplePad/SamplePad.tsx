@@ -130,11 +130,10 @@ const SamplePad = ({ file, ...props }: Props) => {
     if (gainNode) {
       // Schedule the ASDR press and release
       scheduleASDR(gainNode.gain, now, asdrConfig);
-      releaseASDR(gainNode.gain, now + audioBuffer.duration - 0.3, 0.3);
     }
 
     // Play audio
-    sourceNode.start();
+    sourceNode.start(now);
 
     //   setIsPlaying(true);
     // } else {
