@@ -15,7 +15,7 @@ const StaticWaveform = ({ buffer, ...props }: Props) => {
   // Default is 0,1 for graph (lowest scale) - but we might scale up for zooming
   waveformData.forEach((data) => graph.push(mapRange(data, -1, 1, -4, 5)));
 
-  return <LineGraph data={graph} color={"blue"} />;
+  return <LineGraph data={graph} color={"blue"} width={400} height={300} />;
 };
 
 export default StaticWaveform;

@@ -8,6 +8,7 @@ import WaveShaper from "../mods/WaveShaper";
 import AudioWorkletExample from "../mods/AudioWorkletExample";
 import StaticWaveform from "../Waveform/StaticWaveform";
 import { releaseASDR, scheduleASDR } from "../../utils/audio";
+import ASDR from "../mods/ASDR";
 
 const PIANO_KEYS = [
   "C",
@@ -152,8 +153,11 @@ const SamplePad = ({ file, ...props }: Props) => {
         {/* <AudioWorkletExample /> */}
         {/* <Biquad /> */}
         {/* <WaveShaper /> */}
-        {audioBuffer && <StaticWaveform buffer={audioBuffer} />}
-        <Waveform />
+        <div>
+          {audioBuffer && <ASDR duration={audioBuffer.duration} />}
+          {audioBuffer && <StaticWaveform buffer={audioBuffer} />}
+          <Waveform />
+        </div>
         {/* <AudioTime audio={audioElement} /> */}
         {OCTAVES.map((octave, octaveIndex) => (
           <Stack>

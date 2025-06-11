@@ -1,5 +1,6 @@
 import { create } from "zustand";
 import { devtools } from "zustand/middleware";
+import type { ASDRConfig } from "../types/audio";
 
 type AudioNodes = AudioNode | AudioWorkletNode;
 
@@ -10,6 +11,12 @@ export interface AudioState {
   audioNodes: Map<string, AudioNodes>;
   addAudioNode: (key: string, audioNode: AudioNodes) => void;
   removeAudioNode: (key: string) => void;
+
+  // Audio configuration
+
+  // ASDR
+  asdr: ASDRConfig;
+  setASDR: (asdr: Partial<ASDRConfig>) => void;
 }
 
 export const useAudioStore = create<AudioState>()(
@@ -35,6 +42,25 @@ export const useAudioStore = create<AudioState>()(
           audioNodes: state.audioNodes,
         };
       }),
+
+    // Config
+
+    // ASDR
+    asdr: {
+      attack: 0.1,
+      decay: 0.2,
+      sustain: 0.7,
+      release: 0.3,
+      peak: 1.0,
+    },
+    setASDR: (asdr) =>
+      set((state) => ({
+        ...state,
+        asdr: {
+          ...state.asdr,
+          ...asdr,
+        },
+      })),
   }))
 );
 

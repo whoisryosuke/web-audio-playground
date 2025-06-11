@@ -62,7 +62,7 @@ const Waveform = ({ ...props }: Props) => {
     )
   );
 
-  return <LineGraph data={graph} color={"blue"} />;
+  return <LineGraph data={graph} color={"blue"} width={400} height={300} />;
 };
 
 export default Waveform;
