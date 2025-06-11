@@ -7,6 +7,7 @@ import Biquad from "../mods/Biquad";
 import WaveShaper from "../mods/WaveShaper";
 import AudioWorkletExample from "../mods/AudioWorkletExample";
 import StaticWaveform from "../Waveform/StaticWaveform";
+import { releaseASDR, scheduleASDR } from "../../utils/audio";
 
 const PIANO_KEYS = [
   "C",
@@ -33,7 +34,7 @@ type Props = {
 const SamplePad = ({ file, ...props }: Props) => {
   const [isPlaying, setIsPlaying] = useState(false);
   const [bufferLength, setBufferLength] = useState(0);
-  const audioBuffer = useRef<AudioBuffer>(null);
+  const [audioBuffer, setAudioBuffer] = useState<AudioBuffer | null>(null);
   const audioCtx = useRef<AudioContext>(null);
   const { setAudioCtx, audioNodes } = useAudioStore();
 
@@ -59,7 +60,7 @@ const SamplePad = ({ file, ...props }: Props) => {
         arrayBuffer
       );
 
-      audioBuffer.current = newAudioBuffer;
+      setAudioBuffer(newAudioBuffer);
     };
 
     loadSample();
@@ -72,7 +73,7 @@ const SamplePad = ({ file, ...props }: Props) => {
   }, [file]);
 
   const handlePlay = (octaveIndex: number, pianoKeyIndex: number) => {
-    if (!audioBuffer.current || !audioCtx.current) return;
+    if (!audioBuffer || !audioCtx.current) return;
 
     // Check if context is in suspended state (autoplay policy)
     if (audioCtx.current?.state === "suspended") {
@@ -85,7 +86,7 @@ const SamplePad = ({ file, ...props }: Props) => {
 
     // Create the buffer node and attach our audio buffer
     const sourceNode = audioCtx.current.createBufferSource();
-    sourceNode.buffer = audioBuffer.current;
+    sourceNode.buffer = audioBuffer;
     const playbackRateBase = OCTAVE_RATES[octaveIndex];
     const playbackRateMax = playbackRateBase * 2;
     const playbackRatePitch =
@@ -114,6 +115,24 @@ const SamplePad = ({ file, ...props }: Props) => {
     });
     prevNode.connect(audioCtx.current.destination);
     //   sourceNode.connect(audioCtx.current.destination);
+
+    const now = audioCtx.current.currentTime;
+    // Schedule ASDR
+    const asdrConfig = {
+      attack: 0.1,
+      decay: 0.2,
+      sustain: 0.7,
+      release: 0.3,
+      peak: 1.0,
+    };
+    // Get the gain node
+    const gainNode = audioNodes.get("gain") as GainNode;
+    if (gainNode) {
+      // Schedule the ASDR press and release
+      scheduleASDR(gainNode.gain, now, asdrConfig);
+      releaseASDR(gainNode.gain, now + audioBuffer.duration - 0.3, 0.3);
+    }
+
     // Play audio
     sourceNode.start();
 
@@ -134,7 +153,7 @@ const SamplePad = ({ file, ...props }: Props) => {
         {/* <AudioWorkletExample /> */}
         {/* <Biquad /> */}
         {/* <WaveShaper /> */}
-        {audioBuffer.current && <StaticWaveform buffer={audioBuffer.current} />}
+        {audioBuffer && <StaticWaveform buffer={audioBuffer} />}
         <Waveform />
         {/* <AudioTime audio={audioElement} /> */}
         {OCTAVES.map((octave, octaveIndex) => (

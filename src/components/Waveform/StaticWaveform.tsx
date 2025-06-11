@@ -2,18 +2,12 @@ import { LineGraph } from "@whoisryosuke/oat-milk-design";
 import mapRange from "../../utils/mapRange";
 
 type Props = {
-  buffer: AudioBuffer;
+  buffer?: AudioBuffer;
 };
 
 const StaticWaveform = ({ buffer, ...props }: Props) => {
   // Get the waveform data
-  const waveformData = buffer.getChannelData(0);
-
-  console.log(
-    "waveform data",
-    // waveformData,
-    waveformData.filter((data) => data > 5)
-  );
+  const waveformData = buffer ? buffer.getChannelData(0) : [];
 
   const graph: number[] = [];
 
