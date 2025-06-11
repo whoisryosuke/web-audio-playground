@@ -19,7 +19,7 @@ const AudioWorkletExample = (props: Props) => {
       nodeRef.current = new AudioWorkletNode(audioCtx, "white-noise-processor");
 
       console.log("created worklet node", nodeRef.current);
-      addAudioNode(nodeRef.current);
+      addAudioNode("worklet", nodeRef.current);
       setLoaded(true);
     } catch (e) {
       console.log("failed to create worklet", e);
@@ -31,7 +31,7 @@ const AudioWorkletExample = (props: Props) => {
     createNode();
 
     return () => {
-      if (nodeRef.current) removeAudioNode(nodeRef.current);
+      if (nodeRef.current) removeAudioNode("worklet");
     };
   }, [audioCtx]);
 

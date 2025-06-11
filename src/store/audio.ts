@@ -7,9 +7,9 @@ export interface AudioState {
   audioCtx: AudioContext;
   setAudioCtx: (audioCtx: AudioContext) => void;
 
-  audioNodes: AudioNodes[];
-  addAudioNode: (audioNode: AudioNodes) => void;
-  removeAudioNode: (audioNode: AudioNodes) => void;
+  audioNodes: Map<string, AudioNodes>;
+  addAudioNode: (key: string, audioNode: AudioNodes) => void;
+  removeAudioNode: (key: string) => void;
 }
 
 export const useAudioStore = create<AudioState>()(
@@ -21,17 +21,20 @@ export const useAudioStore = create<AudioState>()(
         audioCtx,
       })),
 
-    audioNodes: [],
-    addAudioNode: (audioNode) =>
+    audioNodes: new Map([]),
+    addAudioNode: (key, audioNode) =>
       set((state) => ({
         ...state,
-        audioNodes: [...state.audioNodes, audioNode],
+        audioNodes: state.audioNodes.set(key, audioNode),
       })),
-    removeAudioNode: (audioNode) =>
-      set((state) => ({
-        ...state,
-        audioNodes: state.audioNodes.filter((node) => node == audioNode),
-      })),
+    removeAudioNode: (key) =>
+      set((state) => {
+        state.audioNodes.delete(key);
+        return {
+          ...state,
+          audioNodes: state.audioNodes,
+        };
+      }),
   }))
 );
 

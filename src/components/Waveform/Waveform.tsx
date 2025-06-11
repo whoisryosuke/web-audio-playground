@@ -27,8 +27,12 @@ const Waveform = ({ ...props }: Props) => {
     dataArray.current = new Uint8Array(newBufferLength);
 
     // Connect this audio node to the output
-    addAudioNode(analyser.current);
+    addAudioNode("analyser", analyser.current);
     setLoaded(true);
+
+    return () => {
+      removeAudioNode("analyser");
+    };
   }, [audioCtx]);
 
   // Animate waveform

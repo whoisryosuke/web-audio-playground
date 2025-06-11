@@ -13,14 +13,14 @@ const Biquad = (props: Props) => {
     if (!audioCtx) return;
     console.log("creating gain");
     biquadRef.current = audioCtx.createBiquadFilter();
-    addAudioNode(biquadRef.current);
+    addAudioNode("biquad", biquadRef.current);
 
     biquadRef.current.type = "lowshelf";
     biquadRef.current.frequency.setTargetAtTime(1000, audioCtx.currentTime, 0);
     biquadRef.current.gain.setTargetAtTime(25, audioCtx.currentTime, 0);
 
     return () => {
-      if (biquadRef.current) removeAudioNode(biquadRef.current);
+      if (biquadRef.current) removeAudioNode("biquad");
     };
   }, [audioCtx]);
 

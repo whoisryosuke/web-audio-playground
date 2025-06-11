@@ -32,11 +32,11 @@ const WaveShaper = (props: Props) => {
     waveShaperRef.current.curve = makeDistortionCurve(100, 180);
     waveShaperRef.current.oversample = "4x";
 
-    addAudioNode(waveShaperRef.current);
+    addAudioNode("waveshaper", waveShaperRef.current);
     setLoaded(true);
 
     return () => {
-      if (waveShaperRef.current) removeAudioNode(waveShaperRef.current);
+      if (waveShaperRef.current) removeAudioNode("waveshaper");
     };
   }, [audioCtx]);
 
