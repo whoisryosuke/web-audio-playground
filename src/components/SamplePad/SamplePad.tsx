@@ -9,6 +9,7 @@ import AudioWorkletExample from "../mods/AudioWorkletExample";
 import StaticWaveform from "../Waveform/StaticWaveform";
 import { releaseADSR, scheduleADSR } from "../../utils/audio";
 import ADSR from "../mods/ADSR/ADSR";
+import Echo from "../mods/Echo";
 
 const PIANO_KEYS = [
   "C",
@@ -111,8 +112,15 @@ const SamplePad = ({ file, ...props }: Props) => {
     let prevNode: AudioNode = sourceNode;
     audioNodes.forEach((node, index) => {
       console.log("connecting node", node);
-      prevNode.connect(node);
-      prevNode = node;
+      // Handle custom nodes
+      if ("setup" in node) {
+        node.setup(prevNode);
+        prevNode = node.output;
+      } else {
+        // Handle native AudioNode
+        prevNode.connect(node);
+        prevNode = node;
+      }
     });
     prevNode.connect(audioCtx.current.destination);
     //   sourceNode.connect(audioCtx.current.destination);
@@ -153,8 +161,9 @@ const SamplePad = ({ file, ...props }: Props) => {
         {/* <AudioWorkletExample /> */}
         {/* <Biquad /> */}
         {/* <WaveShaper /> */}
+        <Echo />
         <div>
-          {audioBuffer && <ADSR duration={audioBuffer.duration} />}
+          {/* {audioBuffer && <ADSR duration={audioBuffer.duration} />} */}
           {audioBuffer && <StaticWaveform buffer={audioBuffer} />}
           <Waveform />
         </div>

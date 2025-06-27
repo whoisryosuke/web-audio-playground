@@ -1,8 +1,13 @@
 import { create } from "zustand";
 import { devtools } from "zustand/middleware";
 import type { ADSRConfig } from "../types/audio";
+import type EchoNode from "../audio/nodes/EchoNode";
 
-type AudioNodes = AudioNode | AudioWorkletNode;
+type CustomNode = EchoNode;
+type AudioNodes = AudioNode | AudioWorkletNode | CustomNode;
+type AudioNodeItem = {
+  node: AudioNodes;
+};
 
 export interface AudioState {
   audioCtx: AudioContext;
