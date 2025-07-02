@@ -4,6 +4,8 @@ import Waveform from "../Waveform/Waveform";
 import useAudioStore from "../../store/audio";
 import Gain from "../mods/Gain";
 import Biquad from "../mods/Biquad";
+import AudioWorkletExample from "../mods/AudioWorkletExample";
+import Bitcrusher from "../mods/Bitcrusher";
 
 type Props = {};
 
@@ -20,15 +22,13 @@ const Oscillator = ({ ...props }: Props) => {
   };
 
   const connect = () => {
-    [bassOscRef, hiOscRef].forEach((ref) => {
-      if (!ref.current || !audioCtx.current) return;
-      let prevNode: OscillatorNode | AudioNode = ref.current;
-      audioNodes.forEach((node, index) => {
-        prevNode.connect(node);
-        prevNode = node;
-      });
-      prevNode.connect(audioCtx.current.destination);
+    if (!bassOscRef.current || !audioCtx.current) return;
+    let prevNode: OscillatorNode | AudioNode = bassOscRef.current;
+    audioNodes.forEach((node, index) => {
+      prevNode.connect(node);
+      prevNode = node;
     });
+    prevNode.connect(audioCtx.current.destination);
   };
 
   const disconnect = () => {
@@ -47,33 +47,17 @@ const Oscillator = ({ ...props }: Props) => {
     bassOscRef.current = audioCtx.current.createOscillator();
     bassOscRef.current.type = "sine";
     bassOscRef.current.frequency.value = 220;
-    bassOscRef.current.frequency.linearRampToValueAtTime(
-      880,
-      audioCtx.current.currentTime + 100
-    );
     bassOscRef.current.start();
-
-    // Create second sound
-    hiOscRef.current = audioCtx.current.createOscillator();
-    hiOscRef.current.type = "square";
-    hiOscRef.current.frequency.value = 660;
-    hiOscRef.current.frequency.linearRampToValueAtTime(
-      880,
-      audioCtx.current.currentTime + 200
-    );
-    hiOscRef.current.start();
-    // Loop through any dynamic audio nodes and attach them
 
     console.log("oscillators created", audioCtx.current);
 
-    // return () => {
-    //   audioElement.current?.remove();
-    //   audioCtx.current?.close();
-    // };
+    return () => {
+      disconnect();
+    };
   }, [audioNodes]);
 
   const handlePlay = () => {
-    if (!hiOscRef.current || !bassOscRef.current) return;
+    if (!bassOscRef.current) return;
     // Check if context is in suspended state (autoplay policy)
     if (audioCtx.current?.state === "suspended") {
       audioCtx.current.resume();
@@ -82,15 +66,11 @@ const Oscillator = ({ ...props }: Props) => {
     if (!isPlaying) {
       console.log("playing");
       // Play audio
-      // hiOscRef.current.start();
-      // bassOscRef.current.start();
       connect();
       setIsPlaying(true);
     } else {
       console.log("pausing");
       // Stop audio
-      // hiOscRef.current.stop();
-      // bassOscRef.current.stop();
       disconnect();
       setIsPlaying(false);
     }
@@ -99,9 +79,10 @@ const Oscillator = ({ ...props }: Props) => {
   return (
     <div>
       <Stack vertical gap="0.25rem">
-        <Gain />
-        <Biquad />
+        {/* <Biquad /> */}
+        <Bitcrusher />
         <Waveform />
+        <Gain />
         <Button
           px={5}
           py={2}

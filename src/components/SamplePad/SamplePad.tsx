@@ -10,6 +10,7 @@ import StaticWaveform from "../Waveform/StaticWaveform";
 import { releaseADSR, scheduleADSR } from "../../utils/audio";
 import ADSR from "../mods/ADSR/ADSR";
 import Echo from "../mods/Echo";
+import Bitcrusher from "../mods/Bitcrusher";
 
 const PIANO_KEYS = [
   "C",
@@ -104,7 +105,7 @@ const SamplePad = ({ file, ...props }: Props) => {
     sourceNode.playbackRate.value = playbackRate;
 
     // Add any event listeners to audio (like when it's done)
-    sourceNode.addEventListener("ended", handleDone);
+    // sourceNode.addEventListener("ended", handleDone);
 
     console.log("all audio nodes to connect", audioNodes);
 
@@ -157,11 +158,12 @@ const SamplePad = ({ file, ...props }: Props) => {
     <div>
       {/* <audio ref={audioElement} preload="auto" src={file} /> */}
       <Stack vertical gap="0.25rem">
-        <Gain />
         {/* <AudioWorkletExample /> */}
         {/* <Biquad /> */}
         {/* <WaveShaper /> */}
-        <Echo />
+        {/* <Echo /> */}
+        <Gain />
+        <Bitcrusher />
         <div>
           {/* {audioBuffer && <ADSR duration={audioBuffer.duration} />} */}
           {audioBuffer && <StaticWaveform buffer={audioBuffer} />}

@@ -6,6 +6,7 @@ import {
   Button,
   ButtonGroup,
   Checkbox,
+  Heading,
   InputLabel,
   InputWithLabel,
   LineGraph,
@@ -23,6 +24,7 @@ function App() {
 
   return (
     <ThemeProvider>
+      <Heading type="h2">Bitcrusher (Rust WASM) Example</Heading>
       {/* <AudioPlayer file="music/ff8-magic.mp3" /> */}
       <SamplePad file="music/ff8-magic.mp3" />
       {/* <Oscillator /> */}
